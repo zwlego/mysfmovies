@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE web-app PUBLIC
+"-//Oracle Corporation//DTD Web Application 2.3//EN"
+"http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+
+    <display-name>Archetype Created Web Application</display-name>
+    <listener>
+        <listener-class>com.mysfmovies.MovieServletListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>sfmovies</servlet-name>
+        <servlet-class>com.mysfmovies.MovieServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>sfmovies</servlet-name>
+        <url-pattern>/sfmovies</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>

@@ -1,0 +1,6 @@
+package com.mysfmovies;
+
+public enum Type {
+    TITLE,RELEASE_YEAR,LOCATION,PRODUCATION_COMPANY,DISTRIBUTOR,DIRECTOR,WRITER,ACTOR
+}
+
