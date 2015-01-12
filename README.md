@@ -14,8 +14,8 @@ It mashes up the following APIs to achieve its goal.
 The following technologies are used to implement SF Movies V1.0
 
 <ol>
-<li>JavaScript|Jquery|CSS
-<li>Java|Maven
+<li>JavaScript | Jquery | CSS
+<li>Java | Maven
 <li>3rd Party APIs
 </ol>
 
@@ -43,8 +43,12 @@ Solution: Instead of storing data in the back-end, service requires the front-en
 
 ###Missing Out###
 <ol>
-<li> Store coordinates of all locations in the SFData once source data is updated. This will make the response faster beacuse service will get the coordinates from local storage instead of redirecting to the Goecode API.
-</ol>
+<li>Store all the coordinates information locally. 
+<p>Query coordinates of all locations in the source Data once it is updated. This will make the response faster beacuse service will get the coordinates from local storage instead of redirecting to the Goecode API.</p>
+<li>  Implement Fuzzy Search in the service.
+<p></p>
+</ol>  
+
 
 
 
