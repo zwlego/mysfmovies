@@ -5,7 +5,7 @@ A service that shows on a map where movies have been filmed in San Francisco. Th
 
 ![SF Movies v1.0] (http://github.com/zwlego/mysfmovies/blob/master/SF%20Moives%20v1.0.png)
 
-It mashes up the following APIs to achieve its goal.
+It mashes up the following APIs to achieve its goal
 -Google Maps
 -Google GeoLocation
 -DataSF
@@ -43,7 +43,7 @@ Solution: Instead of storing data in the back-end, service requires the front-en
 
 ###Missing Out###
 <ol>
-<li>Store all the coordinates information locally. 
+<li>Store all the coordinates information locally 
 <p>Query coordinates of all locations in the source Data once it is updated. This will make the response faster beacuse service will get the coordinates from local storage instead of redirecting to the Goecode API.</p>
 <li>Combine search portals
 <p> Instead of letting user input query information according to different attributes, the combined search portal lets user input all the query information into a single search portal. The back-end of the service will recognise and parse the input automatically. </p>
