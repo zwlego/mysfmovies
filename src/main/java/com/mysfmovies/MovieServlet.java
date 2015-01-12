@@ -27,8 +27,6 @@ import org.json.JSONObject;
 
 public class MovieServlet  extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private List<Cinema> cinemas = new ArrayList<Cinema>(); 
-	private List<Query> querys = new ArrayList<Query>();
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 		   throws ServletException, IOException{	
@@ -36,39 +34,14 @@ public class MovieServlet  extends HttpServlet{
     	System.out.println("post");
 		
     	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
-		String json = "";		 
+		String query = "";		 
 		if(br != null){
-			json = br.readLine();
+			query = br.readLine();
 		}
-		System.out.println("Query: "+json);
 		Service ser=new Service();
-		JSONObject result=ser.search(json);
-//		System.out.println(result.toString());
-		
+		JSONObject result=ser.search(query);
 		resp.setContentType("application/json");
 		resp.getWriter().write(result.toString());
-		
-//		
-		
-		 
-//		ObjectMapper mapper = new ObjectMapper();
-//		Query query = mapper.readValue(json, Query.class);
-//		System.out.print(query.title);
-		 
-/*
-		ObjectMapper mapper = new ObjectMapper();
-		Query query = mapper.readValue(json, Query.class);
-		
-		
-			//function
-
-		Cinema cinema = mapper.readValue(json, Cinema.class);
-		cinemas.add(cinema);
-		
-//		 resp.setContentType("Application/json");
-//		 querys.add(query);
-//		 mapper.writeValue(resp.getOutputStream(), querys);		
-*/
 	}
 
 	

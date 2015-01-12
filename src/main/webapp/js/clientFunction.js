@@ -1,12 +1,12 @@
 var markers = [];
 function clientFunction(){
 	var query = getInput();
-	var package={};
-	package["query"]=query;
-	package["data"]="";
-	package["searchType"]="search";
+	var clientFunction={};
+	clientFunction["query"]=query;
+	clientFunction["data"]="";
+	clientFunction["searchType"]="search";
  
-	var ValidJSON = JSON.stringify(package); 
+	var ValidJSON = JSON.stringify(clientFunction); 
 
 	$.post("sfmovies",
 			ValidJSON,
@@ -26,13 +26,13 @@ function filterFunction(array){
 	var query = getInput();
 	var data = {};
 	data["rawResult"]=array;
-	var package={};
-	package["query"]=query;
-	package["data"]=JSON.stringify(data);
-	package["searchType"]="filter";
+	var clientFunction={};
+	clientFunction["query"]=query;
+	clientFunction["data"]=JSON.stringify(data);
+	clientFunction["searchType"]="filter";
 	
 	
-	var ValidJSON = JSON.stringify(package); 
+	var ValidJSON = JSON.stringify(clientFunction); 
 
 	$.post("sfmovies",
 			ValidJSON,
@@ -115,7 +115,6 @@ function createEntry(json,order){
 	entry.style.position="relative";
 	entry.style.left="10px";
 	entry.style.width = "290px";
-//	entry.style.height = "100px";
 	entry.style.overflow = "hidden" 
 	entry.style.color = "white";
 	entry.style.borderBottom="1px solid white";

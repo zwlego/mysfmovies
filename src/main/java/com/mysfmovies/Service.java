@@ -363,7 +363,7 @@ public class Service {
         try{
             json.put("success","false" );
             if(isJSONValid(ob)){
-                Package pack= gson.fromJson(ob, Package.class);
+            	searchRequest pack= gson.fromJson(ob, searchRequest.class);
                 Query query=pack.query;
                 String searchType=pack.searchType;
                 List<SearchPair> pairs=query.toSearchPairs();
