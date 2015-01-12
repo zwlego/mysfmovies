@@ -12,7 +12,6 @@ It mashes up the following APIs to achieve its goal.
 
 ###The Technology Stack###
 The following technologies are used to implement SF Movies V1.0
-
 <ol>
 <li>JavaScript | Jquery | CSS
 <li>Java | Maven
@@ -21,6 +20,7 @@ The following technologies are used to implement SF Movies V1.0
 
 
 ###Problems and Solutions###
+This application is full functional with focus on back-end.
 <ol>
 <li> Source Data Redirection
 <p>
