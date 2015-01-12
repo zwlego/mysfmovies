@@ -3,7 +3,7 @@ mysfmovies
 ###SF Moives###
 A service that shows on a map where movies have been filmed in San Francisco. The user can filter the view using autocompletion search.
 
-![SF Movies v1.0] (http://github.com/zwlego/mysfmovies/blob/master/SF%20Moives%20v1.0.png)
+![SF Movies v1.0] (https://github.com/zwlego/mysfmovies/blob/master/layout.png)
 
 It mashes up the following APIs to achieve its goal
 -Google Maps
@@ -51,6 +51,8 @@ Solution: Instead of storing data in the back-end, service requires the front-en
 <p>
 Right now the service only allows users to type in address to complete the search. By on-map search tool, user can search filming locations fall in desired area on map.
 </p>
+<li>Redesign front-end
+Since this is the first time i implement a front-end, i code the front-end intuitively most of the time. If i was to spend more time on it, i can redesign the page and refator the code. 
 </ol>  
 
 ###Link###
