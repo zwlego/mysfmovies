@@ -45,8 +45,12 @@ Solution: Instead of storing data in the back-end, service requires the front-en
 <ol>
 <li>Store all the coordinates information locally. 
 <p>Query coordinates of all locations in the source Data once it is updated. This will make the response faster beacuse service will get the coordinates from local storage instead of redirecting to the Goecode API.</p>
-<li>  Implement Fuzzy Search in the service.
-<p></p>
+<li>Combine search portals
+<p> Instead of letting user input query information according to different attributes, the combined search portal lets user input all the query information into a single search portal. The back-end of the service will recognise and parse the input automatically. </p>
+<li>Implement a on-map search tool
+<p>
+Right now the service only allows users to type in address to complete the search. By on-map search tool, user can search movies fall in desired area on map.
+</p>
 </ol>  
 
 
