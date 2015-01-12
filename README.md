@@ -19,5 +19,26 @@ The following technologies are used to implement SF Movies V1.0
 <li>3rd Party APIs
 </ol>
 
+###Problems and Solutions###
+<ol>
+<li> Source Data Redirection
+<p>
+Problem: The source data of SF Movies is from DataSF. Every query from a client will cause back-end server to retrieve source
+data from DataSF, a third party API. This redirection can slow down the response effectively.</p>
+<p>
+Solution: First to retrieve the Data from DataSF and store it in the back-end Server. Now the service will use the local data  to compele a query, which will improve the response time. In addition, the service is implemented to retrieve data every desired time interval so that the data can be up to date. A little trade-off here is that the if a update has been made in DataSF, but the service has not retrieved it yet and at this time a user may get an complete result. However, the data of movies updated not often and the response time is of more importance. Another thing is the memory cost of storing source data locally, but the size of data is small. To sum up, the trade off is worthwhile.</p>
+<li> Not Standard Location Address
+<p>
+Problem: The location information in the source data from DataSF is not standard, which will cause Google GeoLocation fail to get the coordinates of the location.</p>
+<p>
+Solution: If the service failed to get coordinates with the original location, the service will parse the location and try with the new location.</p>
+<li> Implementation of "search in results" 
+<p>
+Problem: "Search in results" require service to remember the results of the current thread. </p>
+<p>
+Solution: Instead of storing data in the back-end, service requires the front-end to send the original results back to back-end.
+</p>
+</ol>
+
 
 
