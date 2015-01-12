@@ -49,7 +49,7 @@ Solution: Instead of storing data in the back-end, service requires the front-en
 <p> Instead of letting user input query information according to different attributes, the combined search portal lets user input all the query information into a single search portal. The back-end of the service will recognise and parse the input automatically. </p>
 <li>Implement a on-map search tool
 <p>
-Right now the service only allows users to type in address to complete the search. By on-map search tool, user can search movies fall in desired area on map.
+Right now the service only allows users to type in address to complete the search. By on-map search tool, user can search filming locations fall in desired area on map.
 </p>
 </ol>  
 
