@@ -19,6 +19,7 @@ The following technologies are used to implement SF Movies V1.0
 <li>3rd Party APIs
 </ol>
 
+
 ###Problems and Solutions###
 <ol>
 <li> Source Data Redirection
@@ -38,6 +39,11 @@ Problem: "Search in results" require service to remember the results of the curr
 <p>
 Solution: Instead of storing data in the back-end, service requires the front-end to send the original results back to back-end.
 </p>
+</ol>
+
+###Missing Out###
+<ol>
+<li> Store coordinates of all locations in the SFData once source data is updated. This will make the response faster beacuse service will get the coordinates from local storage instead of redirecting to the Goecode API.
 </ol>
 
 
