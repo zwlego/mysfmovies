@@ -1,14 +1,18 @@
+var markers = [];
 function clientFunction(){
-
 	var query = getInput();
-	
-	var ValidJSON = JSON.stringify(query); 
+	var package={};
+	package["query"]=query;
+	package["data"]="";
+	package["searchType"]="search";
+ 
+	var ValidJSON = JSON.stringify(package); 
+
 	$.post("sfmovies",
 			ValidJSON,
 			function(obj){
 				if(obj.success=="true"){
-					var jsonArray=obj.array;
-					postResult(jsonArray);
+					postResult(obj.array);
 				}
 				else{
 					alert("sorry,no match");
@@ -16,14 +20,38 @@ function clientFunction(){
 			},
 			"json"
 			);
-	
+}
 
+function filterFunction(array){
+	var query = getInput();
+	var data = {};
+	data["rawResult"]=array;
+	var package={};
+	package["query"]=query;
+	package["data"]=JSON.stringify(data);
+	package["searchType"]="filter";
+	
+	
+	var ValidJSON = JSON.stringify(package); 
+
+	$.post("sfmovies",
+			ValidJSON,
+			function(obj){
+				if(obj.success=="true"){
+					postResult(obj.array);
+				}
+				else{
+					alert("sorry,no match");
+				}
+			},
+			"json"
+			);
 }
 
 function getInput(){
 	var form
 	var input={};
-	form=document.getElementById("searchform");
+	form=document.getElementById("searchForm");
 	for(var i=0;i<form.elements.length;i++){
 		var key=form.elements[i].name;
 		input[key] = form.elements[i].value;
@@ -31,15 +59,7 @@ function getInput(){
 	return input;	
 }
 
-
-
-function postMarkers(arrays){
-	for(var j=0;j<arrays.length;j++){
-		var objects=arrays[j];
-		for(var i=0;i<objects.length;i++){
-			var json=objects[i];	
-		}
-	}
+function postMarkers(cinemas){
 	var myLatlng = new google.maps.LatLng(37.786293029785156, -122.4316177368164);
 	var mapOptions = {
   		center: myLatlng,
@@ -47,58 +67,60 @@ function postMarkers(arrays){
 	};
 	var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 	var infowindow = new google.maps.InfoWindow();
-	var marker,i;
-	for(var j=0;j<arrays.length;j++){
-		var objects=arrays[j];
-		for(var i=0;i<objects.length;i++){
-			var json=objects[i];	
-			if(json.hasOwnProperty("latitude")){
-				marker=new google.maps.Marker({
-					position: new google.maps.LatLng(json.latitude,json.lantitude),
-					map: map,
-					title: "num:"+i
-				});
-				google.maps.event.addListener(marker, 'click', (function(marker,i) {
-					return function(){
-						var content="";
-						if(json.hasOwnProperty("locations")){
-							content+=json.locations;
-						}
-						infowindow.setContent(json.title+": "+content);
-						infowindow.open(map,marker);
-					}	
-				})(marker,i));
-				
-			}
-			
-		}
-	}
+    var marker;
+      for (var i = 0; i < cinemas.length; i++) {  
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(cinemas[i].latitude, cinemas[i].lantitude),
+          map: map,
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            infowindow.setContent(cinemas[i].title+": "+cinemas[i].locations);
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+        markers.push(marker);
+      }
 }
+
 function postResult(objects){
-	 var searchForm=document.getElementById("searchform");
-	 var myElem = document.getElementById("resultDiv");
-	 if (myElem != null) {
-		 alert('does exist!');
-		 myElem.parentNode.removeChild(Elem);
+	 var parent=document.getElementById("panel");
+	 var result=document.getElementById("resultDiv");
+	 var filter=document.getElementById("filterButton");
+	 var searchButton=document.getElementById("searchButton");
+	 if (result != null) {
+		 markers=[];
+		 parent.removeChild(result);
+		 parent.removeChild(filter);
 	 }
+	 searchButton.innerHTML="Search Again";
+	 var newButton = document.createElement("button");
+	 newButton.setAttribute("id", "filterButton");
+	 newButton.innerHTML = "Search in Results";
+	 newButton.onclick=function(){
+		 return filterFunction(objects)
+		 };
+	 newButton.style.position="relative";
+	 newButton.style.top="10px";
 	 var items=createResult(objects);
-	 var p=document.getElementById("panel");
-	 p.style.overflow="auto";
-	 p.appendChild(items);
+	 parent.style.overflow="auto";
+	 parent.appendChild(newButton);
+	 parent.appendChild(items);
 	 postMarkers(objects);
 }
 
-function createEntry(json){
+function createEntry(json,order){
 	var entry = document.createElement("div");
+	entry.title=order;
 	entry.style.position="relative";
 	entry.style.left="10px";
 	entry.style.width = "290px";
-	entry.style.height = "100px";
+//	entry.style.height = "100px";
+	entry.style.overflow = "hidden" 
 	entry.style.color = "white";
 	entry.style.borderBottom="1px solid white";
-	
 	entry.innerHTML = json.title;
-	var content=""
+	var content="";
 	if(json.hasOwnProperty('release_year')){
 		content+=" ,"+ json.release_year;
 	}
@@ -108,28 +130,47 @@ function createEntry(json){
 	if(json.hasOwnProperty('actor_2')){
 		content+=","+json.actor_2;
 	}
+	if(json.hasOwnProperty('actor_3')){
+		content+=","+json.actor_3;
+	}
 	if(json.hasOwnProperty('director')){
 		content+="<br/>"+"Director:"+json.director;
 	}
 	if(json.hasOwnProperty('locations')){
-		content+="<br/>"+"Locations:"+json.locations;
+		content+="<br/>"+"Location:"+json.locations;
+	}
+	if(json.hasOwnProperty('production_company')){
+			content+="<br/>"+"Production:"+json.production_company;
+	}
+	if(json.hasOwnProperty('writer')){
+			content+="<br/>"+"Writer:"+json.writer;
+	}
+	if(json.hasOwnProperty('distributor')){
+		content+="<br/>"+"Distributor:"+json.distributor;
 	}
 	entry.innerHTML+=content;
 	return entry;
 }
 
+function myClick(id){
+    google.maps.event.trigger(markers[id], 'click');
+}
+
+
 function createResult(arrays){
 		var result = document.createElement("div");
 		result.setAttribute("id", "resultDiv");
 		result.style.width="310px";
-		result.style.height="450px";
-		for(var j=0;j<arrays.length;j++){
-			var objects=arrays[j];
-			for(var i=0;i<objects.length;i++){
-				var json=objects[i];
-				var entry = createEntry(json);
-				result.appendChild(entry);	
-			}
+		result.style.height="250px";
+		result.style.position="relative";
+		result.style.top="16px";
+		for(var i=0;i<arrays.length;i++){
+			var json=arrays[i];
+			var entry = createEntry(json,i);
+			entry.onclick=function(){
+			 return myClick(this.title);	
+			}	
+			result.appendChild(entry);	
 		}
 		return result;
 }

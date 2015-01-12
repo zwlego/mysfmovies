@@ -23,14 +23,20 @@ import java.util.HashMap;
 public class LocSearch{
 	protected static HashMap<String, float[]> geoMaps = new HashMap<String,float[]>();
 	private String citySuffix = "";
-	
-	
-	
-	//set suffix
+
+	/**
+	 * 
+	 *  set city suffix 
+	 */
 	public void setCitySuffix(String city, String state){
 		this.citySuffix = " " + city + state;
 	}
-	// get coordates
+	/**
+	 * 
+	 * get latitude and lantitud of a given address
+	 * @param  addr  a string represents the address to be queried
+	 * @return 		 a float array contains latitude and lantitude of the given adrress	
+	 */
 	public float[] getGeoLoc(String addr){
 		addr += citySuffix;
 		if(!geoMaps.containsKey(addr)){

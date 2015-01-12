@@ -13,6 +13,16 @@ public class Query {
 	String director;
 	String writer;
 	String actor;
+	
+	
+	/**
+	 *  convert a Query object to a List of SearchPair. Each field of the Query is converted to a SearchPair
+	 *  if the value of this field is non-empty.
+	 *  
+	 *  @return a List of SearchPair converted from this query object.
+	 *  
+	 */
+	
 		public List<SearchPair> toSearchPairs(){
 			List<SearchPair> pairs=new ArrayList<SearchPair>();
 			if(!this.title.equals("")){

@@ -41,7 +41,6 @@
 			float:right;	
 			width: 310px;
 			height:500px;
-	
 	}
 	#panel:hover{
 	}
@@ -52,7 +51,7 @@
 	position: relative ;
 	text-indent:65px;
 	}
-	#searchform{
+	#searchForm{
 		position: relative;
 		top:6px;
 	}
@@ -62,8 +61,12 @@
 		text-align:right;
 		padding-right:8px;
 	}
-	#searchform>input{
+	#searchForm>input{
 		width:200px;
+	}
+	#searchButton{
+		position: relative;
+		top:10px;
 	}
    </style>
 	
@@ -75,8 +78,6 @@
       src="http://maps.google.com/maps/api/js?sensor=false">
     </script>
     
-    
-
     <script type="text/javascript">
       function initialize() {
         var mapOptions = {
@@ -90,8 +91,7 @@
 	</script>
 	
 	<script type="text/javascript">
-		
-		
+	
 	</script>	
 	
 </head>
@@ -102,7 +102,7 @@
 	<div id="panel">
 		<div id="welcome">SF Movies</div>
 		
-		<form id="searchform">
+		<form id="searchForm">
 		
 		<label for="title">Title:</label> 
 		<input type="text" name="title" /> </br>
@@ -127,9 +127,11 @@
 			
 		<label for="actor">Actor:</label> 
 		<input type="text" name="actor" /> </br>
+				
 		</form>
+				<button id="searchButton" onclick="clientFunction()">Search</button>
 		
-		<button id="firstbutton" onclick="clientFunction()">Search</button>
+		
 		
 	</div>
 </body>

@@ -1,5 +1,6 @@
 package com.mysfmovies;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,11 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-
-
-
-
-
+import java.util.HashMap;
 
 
 public class JsonSourceUpdate implements Runnable{
@@ -33,6 +30,8 @@ public class JsonSourceUpdate implements Runnable{
 	       System.out.println(df.format(Calendar.getInstance().getTime()));
 	       JsonSource.setDataSource(jsonText);
 	       connection.disconnect();
+	       JsonSource.setCoordsMap();
+	       
            Thread.sleep(JSON_UPDATE_INTERVAL);
 		}catch(IOException e){
 			System.err.println("IOException: " + e.getMessage());

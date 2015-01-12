@@ -8,16 +8,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import javax.validation.*;
 import com.google.gson.Gson;
-
-
 
 public class Service {
 	JSONArray dataArray;
@@ -27,12 +24,15 @@ public class Service {
 			LOC.setCitySuffix("San Francisco", "CA");
     }
 	
-    public final String getURL="https://data.sfgov.org/resource/yitu-d5am.json";
+    //public final String getURL="https://data.sfgov.org/resource/yitu-d5am.json";
     
-
-
+    /**
+     *  check whether a string is valid json text.
+     *  
+     *  @param  test  a String to be checked
+     *  @return 	  true if test argument is a valid json text, otherwise return false.
+     */
     
-    // used to check if it is a valid JSON string
     public boolean isJSONValid(String test) {
         try {
             new JSONObject(test);
@@ -62,14 +62,21 @@ public class Service {
             }
         }
         return words.toString();
-    }    
-   
-    private SearchPair parser(Type type, String input){
-        SearchPair result=new SearchPair(type);        
+    }
+    
+    /**
+     *  Parse the String in the input argument with respect to the type argument.
+     *  
+     *  @param	input  a String to be parsed
+     *  @return 	   a parsed String
+     */
+    
+    private SearchPair parse(Type type, String input){
+        SearchPair result=new SearchPair(type);
         String words=words(input);
         switch(type){
-            case RELEASE_YEAR:	
-            	//what if 2014---201,5
+            case RELEASE_YEAR:
+                //what if 2014---201,5
                 String years="";
                 for(int i=0;i<words.length();i++){
                     if(words.charAt(i)>='0'&&words.charAt(i)<='9'){
@@ -92,22 +99,84 @@ public class Service {
         return result;
     }
     
-    private SearchPair[] parser(List<SearchPair> pairs){
+    /**
+     *  Parse all the SearchPair in the pairs argument
+     *  
+     *  @param	pairs  a List contains all SearchPair to be parsed
+     *  @return 	   an array contains all the parsed searchPairs
+     *  
+     */
+    
+    private SearchPair[] parse(List<SearchPair> pairs){
         int lens=pairs.size();
         SearchPair result[]=new SearchPair[lens];
         int emptyNum=0;
         for(int i=0;i<lens;i++){
-        	SearchPair temp=(SearchPair)pairs.get(i);
-            result[i]=parser(temp.type_enum,temp.val);
+            SearchPair temp=(SearchPair)pairs.get(i);
+            result[i]=parse(temp.type_enum,temp.val);
             if(result[i].val.equals("")||result[i].val==null){
-            	emptyNum++;
+                emptyNum++;
             }
         }
         if(emptyNum==lens){
-        	return null;
+            return null;
         }
         return result;
     }
+    
+    /**
+     *  Returns the address within parentheses if any.
+     *  
+     *  @param  location  a String represents the address.
+     *  @return			  a String contains parsed address.
+     *  
+     */
+    
+    private String parseLocation(String location){
+        int left=-1;
+        int right=-1;
+        for(int i=0;i<location.length();i++){
+            if(location.charAt(i)=='('){
+                left=i;
+            }
+            if(location.charAt(i)==')'){
+                right=i;
+            }
+        }
+        if(left==-1||right==-1){
+            return location;
+        }
+        return location.substring(left,right+1);
+    }
+    
+    /**
+     *  Returns a float array contains the coordinates of the given location argument. If 
+     *  no result found, return null.
+     *  
+     *  @param	location  a String represents the address
+     *  @return			  return a float array contains two float coordinates, latitude and 
+     *  				  lantitude.
+     */
+    
+    private float[] locate(String location){
+        float[] cords=LOC.getGeoLoc(location);
+        if(cords!=null){
+            return cords;
+        }
+        String parsedLocations=parseLocation(location);
+        cords = LOC.getGeoLoc(parsedLocations);
+        return cords;
+    }
+    
+    /**
+     *  Returns a boolean value that indicates whether ob argment is a match with 
+     *  the information contained in the pair argument. 
+     *  
+     *  @param	pair   a SearchPair to be compared
+     * 	@param	ob	   a JSONObject to be compared
+     * 	@return		   return ture if pair and ob considered matched.
+     * 
+     */
     
     private boolean compare(SearchPair pair, JSONObject ob) throws JSONException{
     	if(pair.val.equals("")||pair.val==null){
@@ -182,12 +251,25 @@ public class Service {
                 }
                 String temp=(String)ob.get(pair.type);
                 temp=temp.toLowerCase();
-                    if(!temp.equals(pair.val)){
+                    if(!temp.contains(pair.val)){
                         return false;
                     }
             }
         return true;
     }
+    
+   
+    /**
+     *  Returns a boolean value that indicates whether ob argment is a match with 
+     *  the information contained in pairs argument.
+     *  @param	pairs  a array SearchPair to be compared
+     * 	@param	ob	   a JSONObject to be compared
+     * 	@return		   return ture if every element in pairs argument considered 
+     * 				   matched with ob argument, otherwise return false. They are 
+     * 				   considered matched if the method compare() returns true with
+     * 				   them as arguments;
+     * 
+     */
     
     private boolean isTarget(SearchPair[] pairs, JSONObject ob) throws JSONException{
         for(int i=0;i<pairs.length;i++){
@@ -198,61 +280,118 @@ public class Service {
         return true;
     }
     
-    private List<List<JSONObject>> search (JSONArray data, SearchPair[] pairs) throws JSONException{
-    	List<List<JSONObject>> result=new ArrayList<List<JSONObject>>();
+    /**
+     * Returns a List of JSONObject which contains all the matched results by going 
+     * through data argument to match the query infomation in the pairs argument.
+     * This privated function is called by search() to implement "search" and "search in result" function. 
+     * 					
+     * 	@param  data  a JSONArray contains provided source data to be looked through.
+     * 	@param	pairs an array of SearchPairs contains all query information. 
+     * 	@return		  a List of JSONObject contains information of all the matched data. If no matched reuslts
+     * 				  found, return an empty List.
+     * 					
+     * 
+     */
+    
+    
+    private List<JSONObject> findLocations (JSONArray data, SearchPair[] pairs) throws JSONException{		
+        List<JSONObject> result=new ArrayList<JSONObject>();
         HashMap<String,List<JSONObject>> map=new HashMap<String,List<JSONObject>>();
-            for(int i=0;i<data.length();i++){
-                JSONObject temp=data.getJSONObject(i);
-                if(isTarget(pairs,temp)){
-                	if(temp.has("locations")){
-                		String location=(String)temp.get("locations");
-                		float cords[]=LOC.getGeoLoc(location);
-                		if(cords!=null){
-                			temp.put("latitude", cords[0]);
-                    		temp.put("lantitude", cords[1]);
-                		}
-                		if(map.containsKey(location)){
-                			map.get(location).add(temp);
-                		}
-                		else{
-                			List<JSONObject> newList=new ArrayList<JSONObject>();
-                			result.add(newList);
-                			map.put(location, newList);
-                			newList.add(temp);
-                		}
-                	}
+        for(int i=0;i<data.length();i++){
+            JSONObject temp=data.getJSONObject(i);
+            if(isTarget(pairs,temp)){
+                if(temp.has("locations")){
+                    String location=(String)temp.get("locations");
+                    if(!temp.has("latitude")){
+                        float cords[]=JsonSource.getCoords(location);
+                        if(cords==null){
+                        	cords=locate(location);
+                        	JsonSource.updateMap(location,cords);
+                        }
+                        if(cords!=null){
+                            temp.put("latitude", cords[0]);
+                            temp.put("lantitude", cords[1]);
+                        }
+                    }
+                    if(map.containsKey(location)){
+                        map.get(location).add(temp);
+                    }
+                    else{
+                        List<JSONObject> sameLocation=new ArrayList<JSONObject>();
+                        map.put(location, sameLocation);
+                        sameLocation.add(temp);
+                    }
                 }
             }
+        }
+        Iterator<List<JSONObject>> listIterator= map.values().iterator();
+        while(listIterator.hasNext()){
+            Iterator<JSONObject> objectIterator=listIterator.next().iterator();
+            while(objectIterator.hasNext()){
+                result.add(objectIterator.next());
+            }
+        }
         return result;
     }
     
+    
+    /**
+     * Returns a JSONObject which contains all the matched results. jsonText contains the user input.
+     * It should be valid jsontext format and contains three name/value pairs. The value paired with 
+     * name "query" is a JSONObject contains all user inputs. The value associated with the name "searchType" 
+     * indicates it is a new search,"search", or search in results,"filter", manner. If it is a "filter", 
+     * the value associated wiht the name "data" contains the unfiltered results in a JsonObject.
+     * The method will return immediately, whether or not there is a matched result. 
+     * 
+     * 
+     *
+     * @param  jsonText a string contains the user query inputs in JSON text format; 
+     * @return 			a JSONObject contains all the mathced results. 
+     * 					There are two name/value pairs. The value associated
+     * 					with the name "success" indicates whether any result has been
+     * 					found. "false" indicates no reuslt; "true" indicates reuslts 
+     * 					found. The value associated with the name "array" is a JSONArray
+     * 					which contains several JSONOBjects. Each JSONObject contains all the 
+     * 					information of a single result. 
+     * 				 
+     */
+    
     public JSONObject search(String ob){
-    	Gson gson = new Gson();
-    	List<List<JSONObject>> result=new ArrayList<List<JSONObject>>();
-    	JSONObject json= new JSONObject();
-    	try{
-    		json.put("success","false" );
-    		if(isJSONValid(ob)){
-        		Query query = gson.fromJson(ob, Query.class);
-        		List<SearchPair> pairs=query.toSearchPairs();
-        		// if the user inputs nothing, return 
-        		if(pairs.size()==0)
-        			return json;
-        		SearchPair[] parsedPairs=parser(pairs);
-        		// if the user inputs only spaces, return 
-        		if(parsedPairs==null)
-        			return json;
-        		result=search(dataArray,parsedPairs);
-        		if(result.size()==0)
-        			return json;
-        		JSONArray jResult=new JSONArray(result);
-        		json.put("array", jResult);
-        		json.put("success", "true");
-        	}
-		}catch(JSONException je){
-			System.out.print(je.toString());
-		}
-    	return json;
+        Gson gson = new Gson();
+        List<JSONObject> result=new ArrayList<JSONObject>();
+        JSONObject json= new JSONObject();
+        try{
+            json.put("success","false" );
+            if(isJSONValid(ob)){
+                Package pack= gson.fromJson(ob, Package.class);
+                Query query=pack.query;
+                String searchType=pack.searchType;
+                List<SearchPair> pairs=query.toSearchPairs();
+                if(pairs.size()==0)
+                    return json;
+                SearchPair[] parsedPairs=parse(pairs);
+                if(parsedPairs==null)
+                    return json;
+                if(searchType.equals("search")){
+                	if(dataArray==null){
+                		return json;
+                	}
+                    result=findLocations(dataArray,parsedPairs);
+                }
+                else if(searchType.equals("filter")){
+                    JSONObject rawData=new JSONObject(pack.data);
+                    result=findLocations(rawData.getJSONArray("rawResult"),parsedPairs);
+                }
+                if(result.size()==0)
+                    return json;
+                JSONArray jsonArray=new JSONArray(result);
+                json.put("array", jsonArray);
+                json.put("success", "true");
+            }
+        }catch(JSONException je){
+            System.out.print(je.toString());
+        }
+        return json;
     }
-
+    
 }

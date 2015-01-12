@@ -1,12 +1,11 @@
 package com.mysfmovies;
-
+/**
+ *  a class used to contain a pair of query information.
+ */
 public class SearchPair {
 	 String type;
 	 String val;
 	 Type type_enum;
-//	 	SearchPair(String s){
-//	 		type=s;
-//	 	}
 	 	SearchPair(Type type){
 	 		this.type_enum=type;
 	 		this.type=types(type);

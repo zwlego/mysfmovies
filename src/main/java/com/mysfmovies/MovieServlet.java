@@ -25,8 +25,6 @@ import org.json.JSONObject;
 
 
 
-
-
 public class MovieServlet  extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private List<Cinema> cinemas = new ArrayList<Cinema>(); 
@@ -42,10 +40,10 @@ public class MovieServlet  extends HttpServlet{
 		if(br != null){
 			json = br.readLine();
 		}
-		System.out.println(json);
+		System.out.println("Query: "+json);
 		Service ser=new Service();
 		JSONObject result=ser.search(json);
-		System.out.println(result.toString());
+//		System.out.println(result.toString());
 		
 		resp.setContentType("application/json");
 		resp.getWriter().write(result.toString());
