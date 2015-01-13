@@ -31,7 +31,6 @@ public class JsonSourceUpdate implements Runnable{
 	       JsonSource.setDataSource(jsonText);
 	       connection.disconnect();
 	       JsonSource.setCoordsMap();
-	       
            Thread.sleep(JSON_UPDATE_INTERVAL);
 		}catch(IOException e){
 			System.err.println("IOException: " + e.getMessage());

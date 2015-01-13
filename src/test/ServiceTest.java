@@ -6,9 +6,33 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.mysfmovies.Service;
+import com.mysfmovies.JsonSource;
 
 public class ServiceTest {
-
+        public final String getURL="https://data.sfgov.org/resource/yitu-d5am.json";
+    
+        private String readAll(Reader rd) throws IOException {
+            StringBuilder sb = new StringBuilder();
+            int cp;
+            while ((cp = rd.read()) != -1) {
+                sb.append((char) cp);
+            }
+            return sb.toString();
+        }
+    
+        private String readJsonFromUrl() throws IOException, JSONException {
+            URL getUrl=new URL(getURL);
+            HttpURLConnection connection = (HttpURLConnection)getUrl.openConnection();
+            connection.connect();
+            JSONArray json;
+            BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String jsonText = readAll(rd);
+            connection.disconnect();
+            return jsonText;
+        }
+    
+        JsoSource.setDataSource(readJsonFromUrl());
+    
 		private Service service = new Service();
 		
 		public ServiceTest() {
