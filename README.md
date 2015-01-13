@@ -10,13 +10,17 @@ It mashes up the following APIs to achieve its goal
 -Google GeoLocation
 -DataSF
 
-###The Technology Stack###
+###The Technology Stack and Architectures###
 The following technologies are used to implement SF Movies V1.0
 <ol>
 <li>JavaScript | Jquery | CSS
 <li>Java | Maven
 <li>3rd Party APIs
 </ol>
+
+The Diagram below shows the Architectures of SF Movies V1.0
+
+![architectures](https://github.com/zwlego/mysfmovies/blob/master/architectures.png) 
 
 
 ###Problems and Solutions###
