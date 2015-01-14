@@ -13,7 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.mysfmovies.Service;
-import com.mysfmovies.JsonSource;
+//import com.mysfmovies.JsonSource;
 
 public class ServiceTest {
     public final String getURL="https://data.sfgov.org/resource/yitu-d5am.json";
@@ -37,33 +37,36 @@ public class ServiceTest {
         return jsonText;
     }
     
-    JsoSource.setDataSource(readJsonFromUrl());
+//    JsoSource.setDataSource(readJsonFromUrl());
     
     private Service service = new Service();
     
     public ServiceTest() {
+    	service.dataArray = readJsonFromUrl();
     }
     
     @Test
     public void test_SearchLocations() {
-        JSONObject filmingLocations = null;
+        JSONArray filmingLocations = null;
         try{
             JSONObject userInput=new JSONObject();
             userInput.put("title", "the enforcer");
             JSONObject query=new JSONObject();
             query.put("searchType", "search");
             query.put("query", userInput);
+            query.put("data", "nothing");
             JSONObject response = service.search(query.toString());
-            filmingLocations = response.getJSONObject("array");
+            filmingLocations = response.getJSONArray("array");
         }catch(JSONException e){
-            
+            e.printStackTrace();
         }
         Assert.assertTrue(filmingLocations.length()==9);
     }
     
     @Test
     public void test_filterLocations() {
-        JSONObject filteredResults = null;
+        
+        JSONArray filteredResults = null;
         try{
             JSONObject userInput=new JSONObject();
             userInput.put("title", "the enforcer");
@@ -71,15 +74,18 @@ public class ServiceTest {
             query.put("searchType", "search");
             query.put("query", userInput);
             JSONObject originalResults = service.search(query.toString());
+            JSONObject data=new JSONObject();
+            data.put("rawResult", originalResults.get("array"));
+            
             
             userInput.put("location", "24th Street Mini Park");
             query.put("searchType", "filter");
             query.put("query", userInput);
-            query.put("rawResult", originalResults);
+            query.put("data", data.toString());
             JSONObject response = service.search(query.toString());
-            filteredResults = response.getJSONObject("array");
+            filteredResults = response.getJSONArray("array");
         }catch(JSONException e){
-            
+            e.printStackTrace();
         }
         Assert.assertTrue(filteredResults.length()==1);
     }
@@ -97,9 +103,8 @@ public class ServiceTest {
             filmingLocations = service.search(query.toString());
             success = filmingLocations.getString("success");
         }catch(JSONException e){
-            
+            e.printStackTrace();
         }
         Assert.assertTrue(success.equals("false"));
     }
-    
 }
