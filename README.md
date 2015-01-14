@@ -3,7 +3,7 @@ mysfmovies
 ###SF Moives###
 A service that shows on a map where movies have been filmed in San Francisco. The user can filter the view using autocompletion search.
 
-![SF Movies v1.0] (https://github.com/zwlego/mysfmovies/blob/master/layout.png)
+![SF Movies v1.0] (https://github.com/zwlego/mysfmovies/blob/master/doc/layout.png)
 
 It mashes up the following APIs to achieve its goal
 -Google Maps
@@ -20,7 +20,7 @@ The following technologies are used to implement SF Movies V1.0
 
 The Diagram below shows the Architectures of SF Movies V1.0
 
-![architectures](https://github.com/zwlego/mysfmovies/blob/master/architectures.png) 
+![SF Movies v1.0](https://github.com/zwlego/mysfmovies/blob/master/doc/architectures.png) 
 
 
 ###Problems and Solutions###
@@ -58,6 +58,10 @@ Right now the service only allows users to type in address to complete the searc
 <li>Redesign front-end
 Since this is the first time i implement a front-end, i code the front-end intuitively most of the time. If i was to spend more time on it, i can redesign the page and refator the code. 
 </ol>  
+
+###Unit Tests###
+Under src/main/test a set of unit tests are included.
+![SF Movies v1.0](https://github.com/zwlego/mysfmovies/blob/master/doc/testResult.png)
 
 ###Link###
 Link to to this application: http://hazel-envoy-816.appspot.com
