@@ -9,11 +9,12 @@ import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.mysfmovies.Service;
-//import com.mysfmovies.JsonSource;
+
 
 public class ServiceTest {
     public final String getURL="https://data.sfgov.org/resource/yitu-d5am.json";
@@ -27,28 +28,29 @@ public class ServiceTest {
         return sb.toString();
     }
     
-    private String readJsonFromUrl() throws IOException, JSONException {
+    private JSONArray readJsonFromUrl() throws IOException, JSONException {
         URL getUrl=new URL(getURL);
         HttpURLConnection connection = (HttpURLConnection)getUrl.openConnection();
         connection.connect();
         BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String jsonText = readAll(rd);
+        JSONArray json=new JSONArray(jsonText);
         connection.disconnect();
-        return jsonText;
+        return json;
     }
     
-//    JsoSource.setDataSource(readJsonFromUrl());
-    
     private Service service = new Service();
+
     
     public ServiceTest() {
-    	service.dataArray = readJsonFromUrl();
+
     }
     
     @Test
     public void test_SearchLocations() {
         JSONArray filmingLocations = null;
         try{
+        	service.dataArray = readJsonFromUrl();
             JSONObject userInput=new JSONObject();
             userInput.put("title", "the enforcer");
             JSONObject query=new JSONObject();
@@ -59,6 +61,8 @@ public class ServiceTest {
             filmingLocations = response.getJSONArray("array");
         }catch(JSONException e){
             e.printStackTrace();
+        }catch(IOException e){
+        	e.printStackTrace();
         }
         Assert.assertTrue(filmingLocations.length()==9);
     }
@@ -68,6 +72,7 @@ public class ServiceTest {
         
         JSONArray filteredResults = null;
         try{
+        	service.dataArray = readJsonFromUrl();
             JSONObject userInput=new JSONObject();
             userInput.put("title", "the enforcer");
             JSONObject query=new JSONObject();
@@ -86,6 +91,8 @@ public class ServiceTest {
             filteredResults = response.getJSONArray("array");
         }catch(JSONException e){
             e.printStackTrace();
+        }catch(IOException e){
+        	e.printStackTrace();
         }
         Assert.assertTrue(filteredResults.length()==1);
     }
@@ -95,6 +102,7 @@ public class ServiceTest {
         JSONObject filmingLocations = null;
         String success = null;
         try{
+        	service.dataArray = readJsonFromUrl();
             JSONObject userInput=new JSONObject();
             userInput.put("title", "##$!@#!");
             JSONObject query=new JSONObject();
@@ -104,6 +112,8 @@ public class ServiceTest {
             success = filmingLocations.getString("success");
         }catch(JSONException e){
             e.printStackTrace();
+        }catch(IOException e){
+        	e.printStackTrace();
         }
         Assert.assertTrue(success.equals("false"));
     }

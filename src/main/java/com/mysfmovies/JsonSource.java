@@ -21,6 +21,10 @@ public final class JsonSource {
 		}
     }
 
+    protected static boolean isMapInit(){
+    	return map!=null;
+    }
+    
     protected static void setCoordsMap() {
     	map=new HashMap<String,float[] >();
     }

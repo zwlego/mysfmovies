@@ -17,9 +17,9 @@ import javax.validation.*;
 import com.google.gson.Gson;
 
 public class Service {
-	JSONArray dataArray;
+	public JSONArray dataArray;
 	LocSearch LOC=new LocSearch();
-	Service(){
+	public Service(){
 			dataArray=JsonSource.getDataSource();
 			LOC.setCitySuffix("San Francisco", "CA");
     }
@@ -303,15 +303,17 @@ public class Service {
                 if(temp.has("locations")){
                     String location=(String)temp.get("locations");
                     if(!temp.has("latitude")){
-                        float cords[]=JsonSource.getCoords(location);
-                        if(cords==null){
-                        	cords=locate(location);
-                        	JsonSource.updateMap(location,cords);
-                        }
-                        if(cords!=null){
-                            temp.put("latitude", cords[0]);
-                            temp.put("lantitude", cords[1]);
-                        }
+                    	if(JsonSource.isMapInit()){
+                    		float cords[]=JsonSource.getCoords(location);
+                            if(cords==null){
+                            	cords=locate(location);
+                            	JsonSource.updateMap(location,cords);
+                            }
+                            if(cords!=null){
+                                temp.put("latitude", cords[0]);
+                                temp.put("lantitude", cords[1]);
+                            }
+                    	}
                     }
                     if(map.containsKey(location)){
                         map.get(location).add(temp);
