@@ -30,6 +30,9 @@ public class Query {
 			if(!(this.distributor==null||this.distributor.equals(""))){
 				pairs.add(new SearchPair(Type.DISTRIBUTOR,this.distributor));
 			}
+            if(!(this.director==null||this.director.equals(""))){
+                pairs.add(new SearchPair(Type.DIRECTOR,this.director));
+            }
 			if(!(this.writer==null||this.writer.equals(""))){
 				pairs.add(new SearchPair(Type.WRITER,this.writer));
 			}
