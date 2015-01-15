@@ -64,7 +64,7 @@ Under src/main/test a set of unit tests are included.
 ![SF Movies v1.0](https://github.com/zwlego/mysfmovies/blob/master/doc/testResult.png)
 
 ###Link###
-Link to to this application: http://hazel-envoy-816.appspot.com
+Link to to this hosted application: http://hazel-envoy-816.appspot.com
 
 
 
