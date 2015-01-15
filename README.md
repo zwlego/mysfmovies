@@ -24,7 +24,7 @@ The Diagram below shows the Architectures of SF Movies V1.0
 
 
 ###Problems and Solutions###
-This application is full functional with focus on back-end.
+This application is fully functional with focus on back-end.
 <ol>
 <li> Source Data Redirection
 <p>
